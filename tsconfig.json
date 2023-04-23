@@ -4,6 +4,7 @@
   "compilerOptions": {
     "types": [
       "nuxt-windicss",
+      "@nuxt/types",
     ]
   }
 }

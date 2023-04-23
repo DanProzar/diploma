@@ -1,11 +1,9 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import {
-  addPlugin,
-  createResolver,
   defineNuxtModule,
   installModule,
 } from '@nuxt/kit'
 import type { FullConfig } from 'windicss/types/interfaces'
-
 
 export default defineNuxtModule({
   meta: {
@@ -20,6 +18,7 @@ export default defineNuxtModule({
     await installModule('nuxt-windicss')
 
     nuxt.hook('windicss:config' as any, (options: FullConfig) => {
+      console.log({options})
       if (!options) {
         options = {}
       }
@@ -53,11 +52,5 @@ export default defineNuxtModule({
       ))
       options.scanOptions.exclude = windicss?.exclude
     })
-
-    // const { resolve } = createResolver(import.meta.url)
-
-    // install the module plugin
-    // addPlugin(resolve('./runtime/plugin'))
   },
 })
-

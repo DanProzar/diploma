@@ -1,5 +1,8 @@
 <script lang="ts" setup>
-import { GoogleMap, Marker, InfoWindow, CustomMarker, CustomControl, MarkerCluster } from 'vue3-google-map'
+import { CustomControl, CustomMarker, GoogleMap, InfoWindow, Marker, MarkerCluster } from 'vue3-google-map'
+import { useMounted } from '@vueuse/core'
+import type { USER_TYPE } from '@/types'
+
 const client = useSuperbase()
 // const { data: user } = await client.auth.getUser()
 
@@ -35,7 +38,7 @@ const client = useSuperbase()
 //       `avatars/${user.user?.id}/avatar`,
 //       avatarFile.value
 //     )
-  
+
 //   if (error || !dataPath) {
 //     console.error(error.message);
 //     return
@@ -44,57 +47,56 @@ const client = useSuperbase()
 //   if (!imgRef.value) {
 //     return
 //   }
-  
+
 //   imgRef.value.src = useCdnURL(dataPath.path)
 // }
 
 const config = useRuntimeConfig().public
 const email = ref('')
 
+const mounted = useMounted()
+const welcome = ref(false)
+
+const onRegister = (asWho: USER_TYPE) => {
+  console.log(asWho)
+}
+
 </script>
 
 <template>
   <div class="refugee-page">
-    <section class="refugee-banner" :style="`background-image: url('${useCdnURL('home/banner.jpg')}')`">
-      <div class="sus">
-        <VTextField
-          v-model="email"
-          type="email"
-          label="E-mail"
-          bg-color="#ffffff"
-          required
-        />
-      </div>
+    <RHeader />
+
+    <RWelcome
+      v-model="welcome"
+      @click="onRegister"
+    />
+
+    <section
+      class="refugee-banner"
+      :style="useBackground('home/banner.jpg')"
+    >
     </section>
   </div>
 </template>
 
 <style lang="scss">
+@import '@/scss/main.scss';
+
 .refugee {
   &-banner {
+    @include useBackdrop();
     @apply
     bg-no-repeat
     bg-center
     bg-cover
     w-full
     relative
-    h-[100vh];
-
-    &::before {
-      content: '';
-      @apply
-      absolute
-      top-0
-      left-0
-      right-0
-      bottom-0
-      bg-opacity-55
-      bg-dark-900
-      ;
-    }
+    h-screen
+    ;
 
     .sus {
-      @apply tw-refugee-container;
+      @apply tw-r-container;
     }
   }
 }

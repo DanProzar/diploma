@@ -1,0 +1,38 @@
+@mixin useBackdrop ($opacity: 0.5) {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(15, 15, 15, $opacity);
+  }
+}
+
+.r-container {
+  @apply tw-r-container;
+}
+
+img {
+  @apply max-h-full max-w-full;
+}
+
+:root {
+  // --yellow: #fab901;
+  // --blue: #004bc1;
+  // --primary-color: #0e6efd;
+  // --primary-color-rgb: 12,92,109;
+  // --secondary-color: #22fffe;
+  // --secondary-color-rgb: 34,255,254;
+  // --bs-primary: #0e6efd;
+
+  // color:#e1f2fe;
+  // color:#182a4b;
+  // color:#fab901;
+  // color:#004bc1;
+  // color:#ffe358;
+  // color:#bae1fd;
+  // color: #0e6efd;
+  // color: #22fffe;
+}
