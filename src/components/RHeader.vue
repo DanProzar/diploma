@@ -37,7 +37,7 @@ const onGoAuth = () => {
       </div>
     </div>
 
-    <RProvideHouseDialog
+    <RWelcomeDialog
       v-model="provideHouse"
     />
   </header>

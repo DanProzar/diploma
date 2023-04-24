@@ -1,5 +1,5 @@
 import { defineConfig } from 'windicss/helpers'
-import { colors } from '@/helpers'
+import { colors } from './src/helpers'
 
 export default defineConfig({
   safelist: [],
