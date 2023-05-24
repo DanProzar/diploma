@@ -1,23 +1,27 @@
 <script lang="ts" setup>
+import { RAuth } from '@/composables/useAuth'
 const headerHeight = useHeaderHeight()
 
 const style = computed(() => ({
   '--header-height': `${headerHeight.value}px`,
 }))
 
+onBeforeUnmount(() => {
+  RAuth.watcher?.unsubscribe()
+  RAuth.watcher = null
+})
+
 </script>
 
 <template>
-  <div class="refugee-new-home" :style="style">
-    <NuxtPage />
+  <div class="r-layout--default" :style="style">
+    <slot />
   </div>
 </template>
 
 <style lang="scss">
-.refugee-new-home {
+.r-layout--default {
   @apply relative
 }
-.r-container {
-  @apply tw-r-container;
-}
+
 </style>

@@ -1,56 +1,10 @@
 <script lang="ts" setup>
 import { CustomControl, CustomMarker, GoogleMap, InfoWindow, Marker, MarkerCluster } from 'vue3-google-map'
 import { useMounted } from '@vueuse/core'
+import { mdiAccount } from '@mdi/js'
 import type { USER_TYPE } from '@/types'
 
-const client = useSuperbase()
-// const { data: user } = await client.auth.getUser()
-
-// let { data: householders, error } = await client
-//   .from('houses')
-//   .select('title')
-
-// const { data: d } = await client.storage.updateBucket('media', {
-//   public: true
-// })
-// const {data: sus} = await client.storage.from('media').getPublicUrl('avatars/Screenshot_1.png')
-
-// const onClick = async () => {
-//   // const {data, error} = await client.auth.signInWithOAuth({ provider: 'google' })
-// }
-
-// const avatarFile = ref<File | null>(null)
-
-// const imgRef = ref<HTMLImageElement>()
-
-// const setActiveFile = (event: any) => {
-//   avatarFile.value = event.target.files[0]
-// }
-
-// const onUploadAvatar = async () => {
-//   if (!avatarFile.value) {
-//     return
-//   }
-
-//   const { data: dataPath, error } = await client.storage
-//     .from('media')
-//     .upload(
-//       `avatars/${user.user?.id}/avatar`,
-//       avatarFile.value
-//     )
-
-//   if (error || !dataPath) {
-//     console.error(error.message);
-//     return
-//   }
-
-//   if (!imgRef.value) {
-//     return
-//   }
-
-//   imgRef.value.src = useCdnURL(dataPath.path)
-// }
-
+const { user } = useAuth()
 const config = useRuntimeConfig().public
 const email = ref('')
 
@@ -58,8 +12,9 @@ const mounted = useMounted()
 const welcome = ref(false)
 
 const onRegister = (asWho: USER_TYPE) => {
-  console.log(asWho)
 }
+
+const center = { lat: 40.689247, lng: -74.044502 };
 
 </script>
 
@@ -76,6 +31,9 @@ const onRegister = (asWho: USER_TYPE) => {
       class="refugee-banner"
       :style="useBackground('home/banner.jpg')"
     >
+      <div class="tw-r-container">
+        
+      </div>
     </section>
   </div>
 </template>
@@ -92,11 +50,15 @@ const onRegister = (asWho: USER_TYPE) => {
     bg-cover
     w-full
     relative
-    h-screen
+    min-h-screen
+    tw-p-header
+    z-2
     ;
+  }
 
-    .sus {
-      @apply tw-r-container;
+  &-page {
+    .r-header {
+      @apply absolute;
     }
   }
 }

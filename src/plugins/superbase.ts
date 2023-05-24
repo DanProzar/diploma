@@ -5,7 +5,10 @@ import { SUPERBASE_KEY } from '@/utils'
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig().public
 
-  const superbase = createClient(config.superbase.url, config.superbase.key)
+  const superbase = createClient(
+    config.superbase.url,
+    config.superbase.key,
+  )
 
   nuxtApp.vueApp.provide(SUPERBASE_KEY, superbase)
 

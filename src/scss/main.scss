@@ -6,12 +6,13 @@
     left: 0;
     right: 0;
     bottom: 0;
+    z-index: -1;
     background-color: rgba(15, 15, 15, $opacity);
   }
 }
 
-.r-container {
-  @apply tw-r-container;
+a {
+  @apply cursor-pointer tw-r-link;
 }
 
 img {

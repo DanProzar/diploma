@@ -1,4 +1,4 @@
-@use 'vuetify/styles/main.sass' as *  with (
+@use '../../../node_modules/vuetify/styles' as *  with (
   $color-pack: false,
   $utilities: false,
   $reset: true,

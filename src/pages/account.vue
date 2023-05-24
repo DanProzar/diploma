@@ -1,0 +1,80 @@
+<script lang="ts" setup>
+const { user, supabase } = useAuth()
+const router = useRouter()
+
+const { loadUserHouses } = useHouses()
+const dialogs = useDialogs()
+
+const computedUser = computed(() => {
+  return {
+    id: user.value?.id,
+    data: {
+      email: user.value?.email,
+      ...user.value?.user_metadata,
+    },
+  }
+})
+
+const onEditProfile = () => {
+  dialogs.value.editProfile = true
+}
+
+onMounted(async () => {
+  const { data: { session } } = await supabase.auth.getSession()
+
+  if (!session?.user) {
+    router.push('/')
+  }
+})
+
+watch(user, async (newUser, oldUser) => {
+  if (newUser && !oldUser) {
+    await loadUserHouses()
+  }
+}, { immediate: true })
+
+</script>
+
+<template>
+  <div v-if="user" class="r-account__page">
+    <RHeader :dark="false" />
+
+    <div class="tw-r-container">
+      <div class="r-account__wrapper">
+        <div class="r-account__form">
+          <RAccountForm
+            :user="computedUser"
+            :editable-avatar="true"
+          />
+          <VBtn
+            color="warning"
+            @click="onEditProfile"
+          >
+            {{ $t('user.profile.edit') }}
+          </VBtn>
+        </div>
+
+        <RHousesDashboard class="r-account__houses-panel" />
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="scss">
+.r-account {
+  &__wrapper {
+    @apply grid gap-6 tw-r-section items-start xl:grid-cols-[2fr,5fr];
+
+    & > div {
+      @apply shadow shadow-primary p-6;
+    }
+  }
+
+  &__form {
+  }
+
+  &__houses-panel {
+  }
+
+}
+</style>
