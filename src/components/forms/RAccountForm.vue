@@ -10,13 +10,12 @@ const props = withDefaults(defineProps<{
   editableAvatar: false,
 })
 
-// const { user } = useAuth()
 const dialogs = useDialogs()
 const defaultAvatar = useCdnURL('avatars/default.png')
 const { isAvatarSet } = useUserProfile()
 
 const computedAvatarSrc = asyncComputed(async () => {
-  if (!await isAvatarSet()) {
+  if (!await isAvatarSet() && !props.user) {
     return defaultAvatar
   }
 

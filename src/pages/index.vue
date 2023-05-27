@@ -1,39 +1,92 @@
 <script lang="ts" setup>
-import { CustomControl, CustomMarker, GoogleMap, InfoWindow, Marker, MarkerCluster } from 'vue3-google-map'
-import { useMounted } from '@vueuse/core'
-import { mdiAccount } from '@mdi/js'
-import type { USER_TYPE } from '@/types'
+import { CustomMarker, InfoWindow, Marker } from 'vue3-google-map'
+import { mdiArrowDownThin } from '@mdi/js'
+import type { IRHouseData } from '@/types'
 
-const { user } = useAuth()
-const config = useRuntimeConfig().public
-const email = ref('')
+const houseSectionRef = ref<HTMLElement | null>(null)
 
-const mounted = useMounted()
-const welcome = ref(false)
+const { transformCoords } = useMap()
 
-const onRegister = (asWho: USER_TYPE) => {
+const {
+  allHouses,
+  getAllHouses,
+} = useHouses()
+
+await useAsyncData(async () => {
+  return await getAllHouses()
+})
+
+const houseData = computed<any>(() =>
+  allHouses.value.map((house: IRHouseData) => ({
+    marker: {
+      ...transformCoords(house.location.coords),
+      icon: useCdnURL('map/marker.svg'),
+    },
+    link: `/houses/${house.id}`,
+    house,
+  })),
+)
+
+const onScrollDown = () => {
+  houseSectionRef.value?.scrollIntoView({
+    block: 'start',
+    behavior: 'smooth',
+  })
 }
-
-const center = { lat: 40.689247, lng: -74.044502 };
 
 </script>
 
 <template>
-  <div class="refugee-page">
+  <div class="r-main">
     <RHeader />
 
-    <RWelcome
-      v-model="welcome"
-      @click="onRegister"
-    />
-
-    <section
-      class="refugee-banner"
-      :style="useBackground('home/banner.jpg')"
+    <VParallax
+      :src="useCdnURL('home/banner.jpg')"
+      :scale="0.1"
     >
-      <div class="tw-r-container">
-        
-      </div>
+      <section
+        class="r-main-banner"
+      >
+        <div class="tw-r-container">
+          <h1 class="r-main-banner__title">
+            {{ $t('home.banner.title') }}
+          </h1>
+
+          <p class="r-main-banner__subtitle">
+            {{ $t('home.banner.subtitle') }}
+          </p>
+        </div>
+
+        <div class="r-main-banner__down">
+          <VBtn
+            :icon="mdiArrowDownThin"
+            variant="flat"
+            color="white"
+            @click="onScrollDown"
+          />
+        </div>
+      </section>
+    </VParallax>
+
+    <section ref="houseSectionRef" class="r-main-houses">
+      <RMap
+        height="100vh"
+      >
+        <Marker
+          v-for="house in houseData"
+          :key="house.marker.position.lat"
+          :options="house.marker"
+        >
+          <InfoWindow>
+            <RHouseInfo
+              :data="house.house"
+              :limited-description="true"
+              :to="`/houses/${house.house.id}`"
+              :show-date="false"
+            />
+          </InfoWindow>
+        </Marker>
+      </RMap>
     </section>
   </div>
 </template>
@@ -41,25 +94,48 @@ const center = { lat: 40.689247, lng: -74.044502 };
 <style lang="scss">
 @import '@/scss/main.scss';
 
-.refugee {
-  &-banner {
-    @include useBackdrop();
-    @apply
-    bg-no-repeat
-    bg-center
-    bg-cover
-    w-full
-    relative
-    min-h-screen
-    tw-p-header
-    z-2
-    ;
+.r-main {
+  .r-header {
+    @apply absolute;
   }
 
-  &-page {
-    .r-header {
-      @apply absolute;
+  &-banner {
+    @apply
+      bg-no-repeat
+      bg-center
+      bg-cover
+      w-full
+      relative
+      min-h-screen
+      text-white
+      flex
+      items-center
+      justify-center
+      flex-col
+      z-2
+    ;
+
+    &__title {
+      @apply text-5xl text-center font-bold;
     }
+
+    &__subtitle {
+      @apply mt-4 text-2xl text-center;
+    }
+
+    &__down {
+      @apply
+        absolute
+        left-0
+        right-0
+        mx-auto
+        bottom-0
+        text-center
+      ;
+    }
+  }
+
+  &-houses {
   }
 }
 </style>

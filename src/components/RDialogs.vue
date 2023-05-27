@@ -42,6 +42,10 @@ const onDeleteHouse = () => {
   dialogs.value.deleteHouse = false
 }
 
+const onEditAvatar = () => {
+  dialogs.value.editAvatar = false
+}
+
 </script>
 
 <template>
@@ -64,6 +68,7 @@ const onDeleteHouse = () => {
 
   <REditAvatarDialog
     v-model="dialogs.editAvatar"
+    @cropped="onEditAvatar"
   />
 
   <REditProfileDialog

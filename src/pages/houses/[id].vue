@@ -27,7 +27,7 @@ const { data: house } = await useAsyncData(async () => {
       .select('*')
       .eq('user_id', data.householder_id)
 
-    if (!householders) {
+    if (!householders || error) {
       return null
     }
 
@@ -69,9 +69,10 @@ const onGoRoute = () => {
     <div class="tw-r-container r-house__container">
       <div class="r-house__block">
         <RHouseGallery
-          :data="house.data.media"
+          :data="house.data.transformed_media"
           height="auto"
         />
+
         <RHouseInfo
           :data="house.data"
           :show-user-info="true"
@@ -107,10 +108,11 @@ const onGoRoute = () => {
   }
 
   &__block {
-    @apply mb-12 grid gap-12 grid-cols-2;
+    @apply mb-12 grid gap-12 grid-cols-1 lg:grid-cols-2;
   }
 
   &__info {
+    @apply <lg:(-order-1);
     .r-house-info {
       &__added {
         @apply self-start;

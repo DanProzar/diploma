@@ -6,7 +6,7 @@ export const houseKey = 'house-inject-key'
 
 export class RHouses {
   public readonly supabase = useSuperbase()
-  public readonly profile = useUserProfile()
+  public readonly auth = useAuth()
   public readonly storage = useHouseStorage()
 
   public readonly houses: Ref<IRHouseData[]> = useState('r-houses', () => [])
@@ -51,18 +51,30 @@ export class RHouses {
   })
 
   public transformImages (house: IRHouseData, user_id: string) {
-    house.media = house.media.map((image) => {
+    house.transformed_media = house.media.map((image) => {
       return useCdnURL(
         `houses/${user_id}/${house.id}/${image}.png`,
       )
     })
   }
 
+  public readonly currentHouseImages = computed(() => {
+    const house = this.houses.value
+      .find(house => house.id === this.houseIdToEdit.value)
+
+    if (!house) {
+      return []
+    }
+
+    return house?.transformed_media
+      ?.map(media => ({ url: media }))
+  })
+
   public async loadUserHouses () {
     const { data, error } = await this.supabase
       .from('houses')
       .select('*')
-      .eq('householder_id', this.profile.user.value?.id)
+      .eq('householder_id', this.auth.user.value?.id)
 
     if (error || !data) {
       console.error(error.message)
@@ -72,7 +84,7 @@ export class RHouses {
     const houses = Array.from(data) as IRHouseData[]
 
     houses.forEach((house) => {
-      this.transformImages(house, this.profile.user.value!.id)
+      this.transformImages(house, this.auth.user.value!.id)
     })
 
     this.houses.value = houses as IRHouseData[]
@@ -86,7 +98,7 @@ export class RHouses {
       .insert({
         ...data,
         media: media.map(image => image.name),
-        householder_id: this.profile.user.value?.id,
+        householder_id: this.auth.user.value?.id,
       })
 
     if (error) {
@@ -97,7 +109,7 @@ export class RHouses {
     const { data: selectData, error: selectError } = await this.supabase
       .from('houses')
       .select('id')
-      .eq('householder_id', this.profile.user.value?.id)
+      .eq('householder_id', this.auth.user.value?.id)
       .eq('place_id', data.place_id)
 
     if (selectError) {
@@ -126,26 +138,69 @@ export class RHouses {
     return true
   }
 
-  public async edit ({ data, media }: IRHouseFormSubmitData) {
+  public async edit (submitData: IRHouseFormSubmitData) {
+    let formData = Object.assign(
+      {},
+      submitData.data,
+    )
+
+    if (submitData.media?.length) {
+      formData = Object.assign(
+        formData,
+        {
+          media: submitData.media,
+        },
+      )
+    }
+
+    const currentData = await this.get(submitData.data.id!)
+
+    if (!currentData) {
+      return false
+    }
+
+    delete formData.transformed_media
+
+    const editData = {} as any
+
+    for (const [key, _value] of Object.entries(currentData)) {
+      const value = toRaw(_value)
+
+      const exceptKeys = ['location']
+
+      if (
+        (['object', 'function', 'symbol'].includes(typeof value) && !exceptKeys.includes(key))
+        || formData[key] === value
+      ) {
+        continue
+      }
+
+      editData[key] = formData[key]
+    }
+
     const { error } = await this.supabase
       .from('houses')
       .update({
-        ...data,
-        media: media.map(image => image.name),
+        ...editData,
+        // media: updateData,
       })
-      .eq('householder_id', this.profile.user.value?.id)
+      .eq('householder_id', this.auth.user.value?.id)
 
     if (error) {
       console.error(error.message)
       return false
     }
 
-    const success = await this.storage.editImages(data.id!, media)
+    // if (submitData.media) {
+    //   const success = await this.storage.editImages(submitData.data.id!, submitData.media)
 
-    return success
+    //   return success
+    // }
+
+    return true
   }
 
-  public async get (id: string) {
+  public async get (id: string | number) {
     const { error, data } = await this.supabase
       .from('houses')
       .select('*')
@@ -173,7 +228,7 @@ export class RHouses {
     const { data, error } = await this.supabase
       .storage
       .from('media')
-      .list(`houses/${this.profile.user.value!.id}/${id}`, options)
+      .list(`houses/${this.auth.user.value!.id}/${id}`, options)
 
     if (!data || error) {
       return null
@@ -195,6 +250,10 @@ export class RHouses {
     if (!data) {
       return false
     }
+
+    data.forEach((house) => {
+      this.transformImages(house, house.householder_id)
+    })
 
     this.allHouses.value = data as IRHouseData[]
   }

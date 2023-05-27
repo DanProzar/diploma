@@ -27,12 +27,6 @@ onMounted(async () => {
   }
 })
 
-watch(user, async (newUser, oldUser) => {
-  if (newUser && !oldUser) {
-    await loadUserHouses()
-  }
-}, { immediate: true })
-
 </script>
 
 <template>
@@ -66,7 +60,7 @@ watch(user, async (newUser, oldUser) => {
     @apply grid gap-6 tw-r-section items-start xl:grid-cols-[2fr,5fr];
 
     & > div {
-      @apply shadow shadow-primary p-6;
+      @apply p-6;
     }
   }
 

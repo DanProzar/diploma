@@ -1,9 +1,13 @@
 <script lang="ts" setup>
 import { GoogleMap, Marker } from 'vue3-google-map'
+import { mdiHomeMapMarker } from '@mdi/js'
 import type { IRHouseLocation, IRHouseMarker } from '~/types'
 
 const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null)
-const apiKey = useRuntimeConfig().public.google.maps.api
+const {
+  api: apiKey,
+  type: mapType,
+} = useRuntimeConfig().public.google.maps
 
 const props = withDefaults(defineProps<{
   width?: string | number
@@ -64,6 +68,46 @@ const restriction = {
   latLngBounds: restrictBounds,
 }
 
+const styles = [
+  {
+    featureType: 'water',
+    elementType: 'geometry',
+    stylers: [
+      { visibility: 'off' },
+    ],
+  }, {
+    featureType: 'landscape',
+    stylers: [
+      { visibility: 'off' },
+    ],
+  }, {
+    featureType: 'road',
+    stylers: [
+      { visibility: 'off' },
+    ],
+  }, {
+    featureType: 'administrative',
+    stylers: [
+      { visibility: 'off' },
+    ],
+  }, {
+    featureType: 'poi',
+    stylers: [
+      { visibility: 'off' },
+    ],
+  }, {
+    featureType: 'administrative',
+    stylers: [
+      { visibility: 'off' },
+    ],
+  }, {
+    elementType: 'labels',
+    stylers: [
+      { visibility: 'off' },
+    ],
+  },
+]
+
 defineExpose({
   mapRef,
 })
@@ -78,13 +122,15 @@ defineExpose({
       :style="computedStyle"
       :disable-double-click-zoom="true"
       :libraries="['places', 'geometry']"
-      :restriction="restriction"
       language="uk"
+      :map-id="mapType"
       gesture-handling="cooperative"
       :center="center"
       :zoom="zoom"
-      :min-zoom="5.8"
+      :styles="styles"
+      :min-zoom="6"
       :disable-default-ui="true"
+
       @click="onClick"
     >
       <template #default="options">

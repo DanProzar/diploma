@@ -109,8 +109,6 @@ export class RAuth {
       return false
     }
 
-    // this.supabase.auth.resetPasswordForEmail()
-
     return true
   }
 

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { NuxtLink } from '#components'
 import {
   mdiAccountAlert,
   mdiAccountGroup,
@@ -15,8 +16,14 @@ import type { IRHouseData } from '~/types'
 const props = withDefaults(defineProps<{
   data: IRHouseData
   showUserInfo?: boolean
+  limitedDescription?: boolean
+  showDate?: boolean
+  to?: string
 }>(), {
   showUserInfo: false,
+  to: '',
+  showDate: true,
+  limitedDescription: false,
 })
 
 const supabase = useSuperbase()
@@ -55,7 +62,7 @@ const computedUserData = computed(() => {
   }
 
   return {
-    id: computedUser.value.id,
+    id: computedUser.value.user_id,
     data: {
       email: computedUser.value.email,
       name: computedUser.value.name,
@@ -64,6 +71,8 @@ const computedUserData = computed(() => {
     },
   }
 })
+
+const computedTitleComponent = computed(() => props.to ? NuxtLink : 'p')
 
 </script>
 
@@ -80,11 +89,22 @@ export default { inheritAttrs: false }
         :user="computedUserData"
       />
 
-      <p class="r-house-info__title">
+      <Component
+        :is="computedTitleComponent"
+        :to="to"
+        class="r-house-info__title"
+      >
         {{ data.title }}
-      </p>
+      </Component>
 
-      <p class="r-house-info__description">
+      <p
+        :class="[
+          'r-house-info__description',
+          {
+            'r-house-info__description--limited': limitedDescription
+          }
+        ]"
+      >
         {{ data.description }}
       </p>
 
@@ -92,51 +112,53 @@ export default { inheritAttrs: false }
         {{ formatAddress(data.location) }}
       </p>
 
-      <div class="r-house-info__options">
-        <div class="r-house-info__count_people r-icon-value">
-          <VIcon :start="true" :icon="mdiAccountGroup" />
-          <span>
-            {{ $t('houses.panel.can_place', {
-              count: data.count_people
-            }) }}
-          </span>
+      <div class="r-house-info__details">
+        <div class="r-house-info__options">
+          <div class="r-house-info__count_people r-icon-value">
+            <VIcon :start="true" :icon="mdiAccountGroup" />
+            <span>
+              {{ $t('houses.panel.can_place', {
+                count: data.count_people
+              }) }}
+            </span>
+          </div>
+
+          <div class="r-house-info__term r-icon-value">
+            <VIcon :start="true" :icon="mdiClockTimeFive" />
+            <span>
+              {{ computedTerms }}
+            </span>
+          </div>
+
+          <div class="r-house-info__type r-icon-value">
+            <VIcon :start="true" :icon="mdiHomeGroup" />
+            <span>
+              {{ computedTypes }}
+            </span>
+          </div>
+
+          <div v-if="data.has_refugees" class="r-house-info__has-refugees r-icon-value">
+            <VIcon :start="true" :icon="mdiAccountAlert" />
+            <span>
+              {{ $t('houses.form.has_refugees') }}
+            </span>
+          </div>
         </div>
 
-        <div class="r-house-info__term r-icon-value">
-          <VIcon :start="true" :icon="mdiClockTimeFive" />
+        <div v-if="showDate" class="r-house-info__added">
           <span>
-            {{ computedTerms }}
-          </span>
-        </div>
-
-        <div class="r-house-info__type r-icon-value">
-          <VIcon :start="true" :icon="mdiHomeGroup" />
-          <span>
-            {{ computedTypes }}
-          </span>
-        </div>
-
-        <div v-if="data.has_refugees" class="r-house-info__has-refugees r-icon-value">
-          <VIcon :start="true" :icon="mdiAccountAlert" />
-          <span>
-            {{ $t('houses.form.has_refugees') }}
+            <b>{{ $t('houses.panel.added') }}</b>:
+            <span>{{ createdAt }}</span>
           </span>
         </div>
       </div>
-    </div>
-
-    <div class="r-house-info__added">
-      <span>
-        <b>{{ $t('houses.panel.added') }}</b>:
-        <span>{{ createdAt }}</span>
-      </span>
     </div>
   </div>
 </template>
 
 <style lang="scss">
 .r-house-info {
-  @apply relative flex-grow flex flex-nowrap justify-between;
+  @apply relative flex-grow;
 
   p {
     text-overflow: ellipsis !important;
@@ -159,7 +181,16 @@ export default { inheritAttrs: false }
   &__description {
     @apply
       text-base
+      mt-2
     ;
+
+    &--limited {
+      word-break: break-all !important;
+      -webkit-line-clamp: 3;
+      -moz-line-clamp: 3;
+      -ms-line-clamp: 3;
+      line-clamp: 3;
+    }
   }
 
   &__location {
@@ -179,7 +210,11 @@ export default { inheritAttrs: false }
   }
 
   &__added {
-    @apply xl:flex-shrink-0 self-end;
+    @apply absolute bottom-0 right-0;
+  }
+
+  &__details {
+    @apply relative;
   }
 
   .r-icon-value {

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import VueCropper from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
 import { useVModel } from '@vueuse/core'
 
@@ -12,6 +11,7 @@ const fileObjectURL = ref('')
 const cropper = ref()
 
 const emit = defineEmits<{
+  (e: 'cropped', path: string): void
   (e: 'update:modelValue', value: boolean): void
 }>()
 
@@ -21,7 +21,6 @@ const client = useSuperbase()
 const { user } = useAuth()
 const { setImage } = useCanvas(canvasRef)
 const files = ref([])
-const previewImages = ref([])
 
 const show = computed(() => !!fileObjectURL.value)
 
@@ -44,27 +43,23 @@ const option = computed(() => ({
 }))
 
 const onUploadAvatar = (event: Event) => {
-  // const target = event.target as HTMLInputElement
+  const target = event.target as HTMLInputElement
 
-  // const file = target.files?.[0]
+  const file = target.files?.[0]
 
-  // if (!file) {
-  //   return
-  // }
+  if (!file) {
+    return
+  }
 
-  // fileObjectURL.value = URL.createObjectURL(file)
+  fileObjectURL.value = URL.createObjectURL(file)
 
-  // for (const file of files.value) {
-  //   const reader = new FileReader()
+  const reader = new FileReader()
 
-  //   reader.onload = (e) => {
-  //     previewImages.value.push({
-  //       url: e.target.result,
-  //     })
-  //   }
+  reader.onload = (e) => {
+    setImage(e.target!.result)
+  }
 
-  //   reader.readAsDataURL(file)
-  // }
+  reader.readAsDataURL(file)
 }
 
 watch(fileObjectURL, (updated) => {
@@ -81,11 +76,11 @@ const onCrop = async () => {
       const avatarHasSet = await isAvatarSet()
       const method = avatarHasSet ? 'update' : 'upload'
 
-      const { error } = await client.storage
+      const { error, data: success } = await client.storage
         .from('media')[method](`avatars/${user.value!.id}`, data)
 
-      if (error) {
-        alert(error.message)
+      if (!error && success) {
+        emit('cropped', success)
       }
     },
   )
@@ -109,13 +104,6 @@ const onCrop = async () => {
           />
         </template>
       </div>
-      
-      <!-- <VImg
-        v-if="previewImages.length"
-        v-for="(image, i) in previewImages"
-        :key="i"
-        :src="image.url"
-      /> -->
 
       <canvas
         ref="canvasRef"

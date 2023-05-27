@@ -20,6 +20,11 @@ const onDelete = (id: number) => {
   houseIdToDelete.value = id
 }
 
+watch(user, async (newUser, oldUser) => {
+  if (newUser) {
+    await loadUserHouses()
+  }
+}, { immediate: true })
 
 </script>
 
@@ -45,7 +50,7 @@ export default { inheritAttrs: false }
         v-for="(house, i) in houses"
         :key="uuid() + i"
         :data="house"
-        :image="house.media[0]"
+        :image="house.transformed_media[0]"
         class="r-houses-dashboard__panel"
         @edit="onEdit"
         @delete="onDelete"

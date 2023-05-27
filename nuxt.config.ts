@@ -50,6 +50,7 @@ export default defineNuxtConfig({
       google: {
         maps: {
           api: 'AIzaSyCUWhsfInW-Z3RzwcqgPWiVBybXF7P1ptE',
+          type: 'a8ec1c2d4b5b187e',
         },
       },
       superbase: {
@@ -57,9 +58,5 @@ export default defineNuxtConfig({
         key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhZ2lic2d5anBqa2hndmdnbnd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzQ1MDA3MjcsImV4cCI6MTk5MDA3NjcyN30.jH2QyPEZktOYqousdYJd5Krhgvo7JK00HPs0g-5_foI',
       },
     },
-  },
-
-  devtools: {
-    enabled: true,
   },
 })

@@ -11,7 +11,7 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-const { editHouseData, houseIdToEdit, getHouseImages, houses } = useHouses()
+const { editHouseData, houseIdToEdit, houses, currentHouseImages } = useHouses()
 
 const proxiedModelValue = useVModel(props, 'modelValue', emit)
 
@@ -22,6 +22,8 @@ const { edit } = useHouses()
 const onSubmit = async (data: IRHouseFormSubmitData) => {
   loading.value = true
 
+  delete data.data.media
+
   await edit(data)
 
   loading.value = false
@@ -29,12 +31,6 @@ const onSubmit = async (data: IRHouseFormSubmitData) => {
   houseIdToEdit.value = null
   emit('close')
 }
-
-const images = computed(() => {
-  return houses.value.find(house => house.id === houseIdToEdit.value)?.media.map(media => ({
-    url: media,
-  }))
-})
 
 </script>
 
@@ -53,7 +49,7 @@ export default { inheritAttrs: false }
       :data="editHouseData"
       :button-text="$t('user.account.houses.edit')"
       :loading="loading"
-      :images="images"
+      :images="currentHouseImages"
       @submit="onSubmit"
     />
   </RDialogWrapper>

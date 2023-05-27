@@ -1,21 +1,12 @@
 <script lang="ts" setup>
 
-const supabase = useSuperbase()
 const { user } = useAuth()
 const {
-  allHouses,
-  allImages,
-  getAllHouseImages,
   getAllHouses,
-  loadUserHouses,
-  houses,
+  allHouses,
 } = useHouses()
 
-watch(user, async (newUser, oldUser) => {
-  if (newUser && !oldUser) {
-    await loadUserHouses()
-  }
-}, { immediate: true })
+await getAllHouses()
 
 </script>
 
@@ -25,10 +16,10 @@ watch(user, async (newUser, oldUser) => {
 
     <div class="tw-r-container r-houses__wrapper">
       <RHouse
-        v-for="house in houses"
+        v-for="house in allHouses"
         :key="house.id!.toString()"
         :data="house"
-        :image="house.media[0]"
+        :image="house.transformed_media?.[0]"
       />
     </div>
   </div>

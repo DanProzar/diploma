@@ -7,8 +7,10 @@ const props = withDefaults(defineProps<{
   image: string
   vertical?: boolean
   editable?: boolean
+  limitedDescription?: boolean
 }>(), {
   editable: true,
+  limitedDescription: false,
 })
 
 const emit = defineEmits<{
@@ -39,25 +41,28 @@ const onDelete = () => emit('delete', props.data.id!)
         <RImage
           :src="image"
           :aspect-ratio="16 / 9"
-          @click="onClick"
+          @click.stop="onClick"
         />
       </div>
 
-      <RHouseInfo :data="data" />
+      <RHouseInfo
+        :data="data"
+        :limited-description="limitedDescription"
+      />
 
       <div v-if="editable" class="r-house-panel__actions">
         <VBtn
           color="warning"
           variant="flat"
           :icon="mdiPencil"
-          @click="onEdit"
+          @click.prevent="onEdit"
         />
 
         <VBtn
           color="error"
           variant="flat"
           :icon="mdiTrashCan"
-          @click="onDelete"
+          @click.prevent="onDelete"
         />
       </div>
     </div>
@@ -67,10 +72,8 @@ const onDelete = () => emit('delete', props.data.id!)
 <style lang="scss">
 .r-house-panel {
   @apply
-    border-primary
-    border-width-[1px]
     text-primary
-    p-4
+    p-6
     transition-opacity
   ;
 
@@ -101,12 +104,18 @@ const onDelete = () => emit('delete', props.data.id!)
       select-none
       transition-opacity
       mx-auto
+      cursor-pointer
       <xl:(max-w-full)
-      hover:(cursor-pointer opacity-80)
     ;
   }
 
   &--vertical {
+    @apply
+      transition
+      transition-all
+      rounded-2xl
+    ;
+
     .r-house-panel {
       &__wrapper {
         @apply grid-cols-1;
@@ -118,8 +127,14 @@ const onDelete = () => emit('delete', props.data.id!)
   }
 
   &:hover {
-    .r-house-panel__actions {
-      @apply opacity-100;
+    .r-house-panel {
+      &__actions {
+        @apply opacity-100;
+      }
+
+      &__photo {
+        @apply opacity-80;
+      }
     }
   }
 }

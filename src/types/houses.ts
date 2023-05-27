@@ -34,7 +34,8 @@ export interface IRHouseData {
   type: R_HOUSE_TYPE | null
   term: R_HOUSE_TERM | null
   has_refugees: boolean
-  media: string[]
+  media?: string[]
+  transformed_media?: string[]
   place_id?: string
 }
 
@@ -65,7 +66,7 @@ export interface IRHouseAddress {
 
 export interface IRHouseFormSubmitData {
   data: IRHouseData
-  media: {
+  media?: {
     name: string
     file: File | string
   }[]

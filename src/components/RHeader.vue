@@ -24,7 +24,6 @@ const onClickFind = () => {
 }
 
 const onGoToAccount = () => {
-  // router.push('/account')
   navigateTo('/account')
 }
 
@@ -101,11 +100,11 @@ const onLogout = async () => {
   @apply static top-0 left-0 right-0 z-5;
 
   &__header {
-    @apply py-4 flex items-center justify-between;
+    @apply py-4 flex items-center justify-between gap-4;
   }
 
   &__logo {
-    @apply w-15 h-15;
+    @apply max-w-15 max-h-15 flex-shrink-0;
 
     img {
       @apply w-full h-full object-contain select-none;

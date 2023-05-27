@@ -1,20 +1,11 @@
 <script lang="ts" setup>
 import { mdiTrashCan } from '@mdi/js'
 import { v4 as uuid } from 'uuid'
-import { useI18n } from 'vue-i18n'
-import { CustomMarker, Marker } from 'vue3-google-map'
-import { mapTermTranslations, mapTypeTranslations } from '~/helpers'
-import {
-  R_HOUSE_TERM,
-  R_HOUSE_TYPE,
-} from '@/types'
 import type {
-  IRCheckboxGroupItem,
   IRHouseData,
   IRHouseFormSubmitData,
   IRHouseImage,
   IRHouseLocation,
-  IRHouseLocationData,
 } from '@/types'
 
 const props = withDefaults(defineProps<{
@@ -67,7 +58,7 @@ let mapCenter = reactive<IRHouseLocation>({
 
 const currentMediaItem = ref(0)
 const files = ref([])
-const previewImages = ref<IRHouseImage[]>(props.images || [])
+const previewImages = toRef(props, 'images', [])
 
 const computedFileRules = computed(() => {
   const rules = [required]
@@ -328,7 +319,7 @@ export default { inheritAttrs: false }
 
     &-media,
     &-map {
-      grid-column: 1;
+      @apply col-span-2;
     }
   }
 
