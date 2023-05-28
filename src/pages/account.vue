@@ -2,7 +2,6 @@
 const { user, supabase } = useAuth()
 const router = useRouter()
 
-const { loadUserHouses } = useHouses()
 const dialogs = useDialogs()
 
 const computedUser = computed(() => {

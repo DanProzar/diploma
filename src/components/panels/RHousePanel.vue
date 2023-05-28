@@ -10,7 +10,7 @@ const props = withDefaults(defineProps<{
   limitedDescription?: boolean
 }>(), {
   editable: true,
-  limitedDescription: false,
+  limitedDescription: true,
 })
 
 const emit = defineEmits<{
@@ -72,6 +72,10 @@ const onDelete = () => emit('delete', props.data.id!)
 <style lang="scss">
 .r-house-panel {
   @apply
+    rounded-[2rem]
+    shadow
+    shadow-primary
+    shadow-md
     text-primary
     p-6
     transition-opacity
@@ -102,6 +106,11 @@ const onDelete = () => emit('delete', props.data.id!)
     @apply
       max-w-80
       select-none
+      bg-secondary
+      bg-opacity-75
+      rounded-lg
+      py-4
+      px-1
       transition-opacity
       mx-auto
       cursor-pointer

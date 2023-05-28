@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { RHouseGallery } from '#components'
 import { InfoWindow, Marker } from 'vue3-google-map'
 
 let id = useRoute().params.id

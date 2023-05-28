@@ -44,19 +44,21 @@ export default defineNuxtConfig({
   css: [
     '@/scss/main.scss',
   ],
-
   runtimeConfig: {
     public: {
       google: {
         maps: {
-          api: 'AIzaSyCUWhsfInW-Z3RzwcqgPWiVBybXF7P1ptE',
-          type: 'a8ec1c2d4b5b187e',
+          api: process.env.R_GOOGLE_MAPS_API,
+          type: process.env.R_GOOGLE_MAPS_MAP_TYPE,
         },
       },
       superbase: {
-        url: 'https://bagibsgyjpjkhgvggnwv.supabase.co',
-        key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhZ2lic2d5anBqa2hndmdnbnd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzQ1MDA3MjcsImV4cCI6MTk5MDA3NjcyN30.jH2QyPEZktOYqousdYJd5Krhgvo7JK00HPs0g-5_foI',
+        url: process.env.R_SUPABASE_URL,
+        key: process.env.R_SUPABASE_KEY,
       },
     },
+  },
+  devtools: {
+    enabled: true,
   },
 })

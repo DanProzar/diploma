@@ -58,7 +58,7 @@ let mapCenter = reactive<IRHouseLocation>({
 
 const currentMediaItem = ref(0)
 const files = ref([])
-const previewImages = toRef(props, 'images', [])
+const previewImages = ref(props.images || [])
 
 const computedFileRules = computed(() => {
   const rules = [required]

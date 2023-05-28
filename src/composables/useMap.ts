@@ -2,7 +2,6 @@ import { useMounted } from '@vueuse/core'
 import type { IRHouseAddress, IRHouseLocation, IRHouseLocationData } from '~/types'
 
 export function useMap () {
-  const isMounted = useMounted()
   const apiKey = useRuntimeConfig().public.google.maps.api
 
   function convertAddressComponents (addressComponents: any): IRHouseLocationData {

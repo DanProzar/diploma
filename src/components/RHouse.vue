@@ -15,7 +15,6 @@ defineProps<{
       :image="image"
       :vertical="true"
       :editable="false"
-      :limited-description="true"
     />
   </div>
 </template>

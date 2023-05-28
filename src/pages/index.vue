@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CustomMarker, InfoWindow, Marker } from 'vue3-google-map'
+import { InfoWindow, Marker } from 'vue3-google-map'
 import { mdiArrowDownThin } from '@mdi/js'
 import type { IRHouseData } from '@/types'
 
@@ -34,6 +34,10 @@ const onScrollDown = () => {
   })
 }
 
+definePageMeta({
+  name: 'home',
+})
+
 </script>
 
 <template>
@@ -41,7 +45,7 @@ const onScrollDown = () => {
     <RHeader />
 
     <VParallax
-      :src="useCdnURL('home/banner.jpg')"
+      :src="useCdnURL('home/banner.png')"
       :scale="0.1"
     >
       <section
@@ -77,7 +81,7 @@ const onScrollDown = () => {
           :key="house.marker.position.lat"
           :options="house.marker"
         >
-          <InfoWindow>
+          <InfoWindow class="r-main-houses__info-window">
             <RHouseInfo
               :data="house.house"
               :limited-description="true"
@@ -136,6 +140,9 @@ const onScrollDown = () => {
   }
 
   &-houses {
+    &__info-window {
+      @apply max-w-100;
+    }
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   data: string[]
   height?: number | string
 }>(), {

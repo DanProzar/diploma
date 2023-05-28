@@ -1,10 +1,13 @@
 <script lang="ts" setup>
-
 const { user } = useAuth()
 const {
   getAllHouses,
   allHouses,
 } = useHouses()
+
+definePageMeta({
+  name: 'houses',
+})
 
 await getAllHouses()
 

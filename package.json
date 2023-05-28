@@ -47,5 +47,8 @@
     "vue3-lazy-hydration": "^1.2.1",
     "vuetify": "^3.1.13",
     "yaml-eslint-parser": "^0.5.0"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3"
   }
 }
