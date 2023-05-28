@@ -36,11 +36,11 @@ const createdAt = computed(() => {
 })
 
 const computedTerms = computed(() => {
-  return mapTermTranslations(props.data.term)
+  return mapTermTranslations(props.data.term!)
 })
 
 const computedTypes = computed(() => {
-  return mapTypeTranslations(props.data.type)
+  return mapTypeTranslations(props.data.type!)
 })
 
 const computedUser = asyncComputed(async () => {

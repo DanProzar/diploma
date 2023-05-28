@@ -1,10 +1,9 @@
-import { useMounted } from '@vueuse/core'
 import type { IRHouseAddress, IRHouseLocation, IRHouseLocationData } from '~/types'
 
 export function useMap () {
   const apiKey = useRuntimeConfig().public.google.maps.api
 
-  function convertAddressComponents (addressComponents: any): IRHouseLocationData {
+  function convertAddressComponents (addressComponents: any): Omit<IRHouseLocationData, 'coords'> {
     const autofillParams: any = {}
 
     addressComponents.forEach((component: any) => {
@@ -27,7 +26,7 @@ export function useMap () {
       }
     })
 
-    const data: IRHouseLocationData = Object.assign(
+    const data = Object.assign(
       {},
       {
         houseNumber: autofillParams.street_number,

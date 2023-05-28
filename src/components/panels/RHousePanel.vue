@@ -4,7 +4,7 @@ import type { IRHouseData } from '~/types'
 
 const props = withDefaults(defineProps<{
   data: IRHouseData
-  image: string
+  image?: string
   vertical?: boolean
   editable?: boolean
   limitedDescription?: boolean

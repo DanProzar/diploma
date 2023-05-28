@@ -49,6 +49,8 @@
     "yaml-eslint-parser": "^0.5.0"
   },
   "dependencies": {
+    "@nuxt/types": "^2.16.3",
+    "@types/uuid": "^9.0.1",
     "cross-env": "^7.0.3"
   }
 }

@@ -115,8 +115,7 @@ watch(
   >
     <div class="r-auth">
       <div class="r-auth__form">
-        
-        <!-- <RLoginForm
+        <RLoginForm
           v-if="isLogin"
           ref="loginForm"
           v-model:data="loginData"
@@ -131,7 +130,7 @@ watch(
           ref="registerForm"
           :loading="registerLoading"
           @submit="onRegister"
-        /> -->
+        />
       </div>
 
       <p class="r-auth__hint">
