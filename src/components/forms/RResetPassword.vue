@@ -2,6 +2,12 @@
 import { type VForm } from 'vuetify/components'
 import { useI18n } from 'vue-i18n'
 
+const props = withDefaults(defineProps<{
+  showPasswords?: boolean
+}>(), {
+  showPasswords: false,
+})
+
 const { t } = useI18n()
 const form = ref<VForm | null>(null)
 
@@ -14,6 +20,9 @@ const emit = defineEmits<{
 const email = ref('')
 
 const loading = ref(false)
+
+const password = ref('')
+const passwordConfirm = ref('')
 
 const onSubmit = async () => {
   loading.value = true
@@ -39,7 +48,9 @@ const computedErrorMessage = computed(() => {
   }
 })
 
-const { required, email: emailRule } = useRules()
+const { required, email: emailRule, password_match, password_min } = useRules()
+
+const passwordMatchRule = (v: string) => password_match(v, password.value)
 
 defineExpose({
   form,
@@ -59,6 +70,7 @@ export default { inheritAttrs: false }
     @submit.prevent="onSubmit"
   >
     <VTextField
+      v-if="!showPasswords"
       v-model="email"
       class="r-form-login__email"
       type="email"
@@ -66,6 +78,26 @@ export default { inheritAttrs: false }
       :rules="[required, emailRule]"
       required
     />
+
+    <template v-if="showPasswords">
+      <VTextField
+        v-model="password"
+        class="r-user-form__password"
+        :rules="[required, password_min]"
+        type="password"
+        :label="$t('auth.form.labels.password')"
+        required
+      />
+
+      <VTextField
+        v-model="passwordConfirm"
+        class="r-user-form__password-confirm"
+        type="password"
+        :rules="[required, passwordMatchRule]"
+        :label="$t('auth.form.labels.password_confirm')"
+        required
+      />
+    </template>
 
     <span v-if="computedErrorMessage" class="r-auth__error">
       {{ computedErrorMessage }}
@@ -75,6 +107,7 @@ export default { inheritAttrs: false }
       type="submit"
       class="r-form-login__submit-button"
       color="secondary"
+      :loading="loading"
     >
       {{ $t('auth.reset_password.title') }}
     </VBtn>

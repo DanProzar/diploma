@@ -80,10 +80,29 @@ const onCrop = async () => {
         .from('media')[method](`avatars/${user.value!.id}`, data)
 
       if (!error && success) {
-        emit('cropped', success)
+        emit('cropped', success.path)
       }
     },
   )
+}
+
+const preview = ref()
+
+const previewStyle = computed(() => {
+  if (!preview.value) {
+    return null
+  }
+
+  return {
+    width: `${preview.value.w}px`,
+    height: `${preview.value.h}px`,
+    overflow: 'hidden',
+    margin: '5px',
+  }
+})
+
+const onCropMoving = (data) => {
+  preview.value = data
 }
 
 </script>
@@ -96,21 +115,27 @@ const onCrop = async () => {
     class="r-edit-avatar__dialog"
   >
     <div class="r-edit-avatar">
-      <div class="r-edit-avatar__cropper">
-        <template v-if="show">
-          <VueCropper
-            ref="cropper"
-            v-bind="option"
-          />
-        </template>
-      </div>
+      <div class="r-edit-avatar__wrapper">
+        <div class="r-edit-avatar__cropper">
+          <template v-if="show">
+            <VueCropper
+              ref="cropper"
+              v-bind="option"
+              @real-time="onCropMoving"
+            />
+          </template>
+        </div>
 
-      <canvas
-        ref="canvasRef"
-        class="r-edit-avatar__canvas"
-        width="200"
-        height="200"
-      />
+        <div
+          v-if="preview"
+          class="r-edit-avatar__preview"
+          :style="previewStyle"
+        >
+          <div :style="preview.div">
+            <img :src="preview.url" :style="preview.img">
+          </div>
+        </div>
+      </div>
 
       <VFileInput
         v-model="files"
@@ -121,7 +146,7 @@ const onCrop = async () => {
       />
 
       <VBtn color="secondary" @click="onCrop">
-        Crop
+        {{ $t('user.profile.crop_image') }}
       </VBtn>
     </div>
   </RDialogWrapper>
@@ -134,6 +159,17 @@ const onCrop = async () => {
   &__cropper {
     aspect-ratio: 1;
     @apply w-40;
+  }
+
+  &__preview {
+    img {
+      max-width: initial;
+      max-height: initial;
+    }
+  }
+
+  &__wrapper {
+    @apply grid gap-6 grid-cols-2;
   }
 }
 </style>

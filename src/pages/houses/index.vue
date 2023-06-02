@@ -17,13 +17,19 @@ await getAllHouses()
   <div class="r-houses-page">
     <RHeader :dark="false" />
 
-    <div class="tw-r-container r-houses__wrapper">
-      <RHouse
-        v-for="house in allHouses"
-        :key="house.id!.toString()"
-        :data="house"
-        :image="house.transformed_media?.[0]"
-      />
+    <div class="tw-r-container">
+      <h1 class="r-houses__title">
+        {{ $t('houses.page.title') }}
+      </h1>
+
+      <div class="r-houses__wrapper">
+        <RHouse
+          v-for="house in allHouses"
+          :key="house.id!.toString()"
+          :data="house"
+          :image="house.transformed_media?.[0]"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -38,6 +44,16 @@ await getAllHouses()
     grid-cols-1
     md:grid-cols-2
     xl:grid-cols-3;
+  }
+
+  &__title {
+    @apply
+      text-3xl
+      mt-4
+      text-center
+      text-secondary
+      font-bold
+    ;
   }
 }
 </style>

@@ -25,6 +25,8 @@ export class RAuth {
     this.signOut = this.signOut.bind(this)
     this.resetPasswordWithEmail = this.resetPasswordWithEmail.bind(this)
 
+    this.updateUserWithNewPassword = this.updateUserWithNewPassword.bind(this)
+
     if (!RAuth.watcher) {
       RAuth.watcher = this.supabase.auth.onAuthStateChange(
         async (action, session) => {
@@ -115,7 +117,26 @@ export class RAuth {
   public async resetPasswordWithEmail (email: string) {
     const { data, error } = await this.supabase
       .auth
-      .resetPasswordForEmail(email)
+      .resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/account?redirect=1`,
+      })
+
+    if (error) {
+      console.error(error.message)
+      return false
+    }
+
+    if (!data) {
+      return false
+    }
+
+    return true
+  }
+
+  public async updateUserWithNewPassword (password: string) {
+    const { data, error } = await this.supabase
+      .auth
+      .updateUser({ password })
 
     if (error) {
       console.error(error.message)

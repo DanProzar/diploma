@@ -44,33 +44,29 @@ definePageMeta({
   <div class="r-main">
     <RHeader />
 
-    <VParallax
-      :src="useCdnURL('home/banner.png')"
-      :scale="0.1"
+    <section
+      class="r-main-banner"
+      :style="useBackground('home/banner.png')"
     >
-      <section
-        class="r-main-banner"
-      >
-        <div class="tw-r-container">
-          <h1 class="r-main-banner__title">
-            {{ $t('home.banner.title') }}
-          </h1>
+      <div class="tw-r-container">
+        <h1 class="r-main-banner__title">
+          {{ $t('home.banner.title') }}
+        </h1>
 
-          <p class="r-main-banner__subtitle">
-            {{ $t('home.banner.subtitle') }}
-          </p>
-        </div>
+        <p class="r-main-banner__subtitle">
+          {{ $t('home.banner.subtitle') }}
+        </p>
+      </div>
 
-        <div class="r-main-banner__down">
-          <VBtn
-            :icon="mdiArrowDownThin"
-            variant="flat"
-            color="white"
-            @click="onScrollDown"
-          />
-        </div>
-      </section>
-    </VParallax>
+      <div class="r-main-banner__down">
+        <VBtn
+          :icon="mdiArrowDownThin"
+          variant="flat"
+          color="white"
+          @click="onScrollDown"
+        />
+      </div>
+    </section>
 
     <section ref="houseSectionRef" class="r-main-houses">
       <RMap
@@ -81,7 +77,9 @@ definePageMeta({
           :key="house.marker.position.lat"
           :options="house.marker"
         >
-          <InfoWindow class="r-main-houses__info-window">
+          <InfoWindow
+            class="r-main-houses__info-window"
+          >
             <RHouseInfo
               :data="house.house"
               :limited-description="true"

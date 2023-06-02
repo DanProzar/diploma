@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 const { user, supabase } = useAuth()
 const router = useRouter()
+const route = useRoute()
 
 const dialogs = useDialogs()
 
@@ -16,6 +17,10 @@ const computedUser = computed(() => {
 
 const onEditProfile = () => {
   dialogs.value.editProfile = true
+}
+
+if (Object.keys(route.query).includes('redirect')) {
+  dialogs.value.reset_confirm = true
 }
 
 onMounted(async () => {
@@ -56,7 +61,14 @@ onMounted(async () => {
 <style lang="scss">
 .r-account {
   &__wrapper {
-    @apply grid gap-6 tw-r-section items-start xl:grid-cols-[2fr,5fr];
+    @apply
+    grid
+    gap-6
+    tw-r-section
+    items-start
+    xl:grid-cols-[2fr,5fr];
+
+    place-items: inherit;
 
     & > div {
       @apply p-6;
@@ -64,9 +76,11 @@ onMounted(async () => {
   }
 
   &__form {
+    @apply border-[1px] border-primary;
   }
 
   &__houses-panel {
+    @apply border-[1px] border-primary;
   }
 
 }

@@ -23,7 +23,7 @@ const onGoToReset = () => {
 
 const onResetPassword = () => {
   dialogs.value.reset_password = false
-  dialogs.value.auth = true
+  dialogs.value.reset_message = true
 }
 
 const onEditProfile = () => {
@@ -44,6 +44,10 @@ const onDeleteHouse = () => {
 
 const onEditAvatar = () => {
   dialogs.value.editAvatar = false
+}
+
+const onUpdatePassword = () => {
+  dialogs.value.reset_confirm = false
 }
 
 </script>
@@ -89,5 +93,14 @@ const onEditAvatar = () => {
   <RDeleteHouseDialog
     v-model="dialogs.deleteHouse"
     @close="onDeleteHouse"
+  />
+
+  <RResetMessageDialog
+    v-model="dialogs.reset_message"
+  />
+
+  <RResetConfirmDialog
+    v-model="dialogs.reset_confirm"
+    @success="onUpdatePassword"
   />
 </template>

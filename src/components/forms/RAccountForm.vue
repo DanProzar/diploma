@@ -15,7 +15,7 @@ const defaultAvatar = useCdnURL('avatars/default.png')
 const { isAvatarSet } = useUserProfile()
 
 const computedAvatarSrc = asyncComputed(async () => {
-  if (!await isAvatarSet() && !props.user) {
+  if (!await isAvatarSet() || !props.user) {
     return defaultAvatar
   }
 
@@ -127,7 +127,7 @@ const onEditAvatar = () => {
   }
 
   &__top {
-    @apply flex gap-4 items-center;
+    @apply flex gap-4 items-center ;
 
     p {
       @apply text-primary text-lg;
@@ -137,6 +137,7 @@ const onEditAvatar = () => {
   &__info {
     @apply my-6 border-separate;
     border-spacing: 0 0.5rem;
+
     &-item {
       @apply not-last:(mb-4);
       td {

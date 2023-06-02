@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 const emit = defineEmits<{
-  (e: 'reset'): void
+  (e: 'success'): void
 }>()
 
 const dialogs = useDialogs()
-
 const resetForm = ref()
 
-const onReset = () => emit('reset')
+const onReset = () => emit('success')
 
 </script>
 
@@ -15,12 +14,12 @@ const onReset = () => emit('reset')
   <RDialogWrapper
     v-model="dialogs.reset_password"
     max-width="40rem"
-    :title="$t('dialog.reset_password.title')"
+    :title="$t('dialog.reset_password.confirmTitle')"
     class="r-auth__dialog"
   >
     <div class="r-auth">
       <div class="r-auth__form">
-        <RResetPassword
+        <RResetPasswordConfirm
           ref="resetForm"
           @success="onReset"
         />

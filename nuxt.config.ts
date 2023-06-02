@@ -1,7 +1,6 @@
 import { createResolver } from '@nuxt/kit'
 import json5 from '@miyaneee/rollup-plugin-json5'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
-import { colors } from './src/helpers'
 
 const { resolve } = createResolver(import.meta.url)
 
@@ -59,6 +58,6 @@ export default defineNuxtConfig({
     },
   },
   devtools: {
-    enabled: true,
+    enabled: false,
   },
 })
