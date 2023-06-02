@@ -22,7 +22,7 @@ await getAllHouses()
         {{ $t('houses.page.title') }}
       </h1>
 
-      <div class="r-houses__wrapper">
+      <div v-if="allHouses?.length" class="r-houses__wrapper">
         <RHouse
           v-for="house in allHouses"
           :key="house.id!.toString()"
