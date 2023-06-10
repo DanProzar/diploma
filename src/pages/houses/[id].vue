@@ -4,10 +4,7 @@ import { InfoWindow, Marker } from 'vue3-google-map'
 
 let id = useRoute().params.id
 
-const { get, getHouseImages, supabase } = useHouses()
-const {
-  formatAddress,
-} = useMap()
+const { get, supabase } = useHouses()
 
 const mapRef = ref()
 
